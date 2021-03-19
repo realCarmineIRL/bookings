@@ -1,16 +1,23 @@
 # bookings.py
 import os
-from flask import Flask, request, jsonify
-
-import customers as cs
-import clinics as cls
-import services as ss
-import services_timeslots as st
+from flask import request, jsonify
 
 
-app = Flask(__name__)
+from flask import render_template, request, flash, redirect, url_for
 
-@app.route('/bookings', methods=['POST'])
+from . import bookings_blueprint
+
+from project.models import Booking
+from project import db
+
+
+import project.bookings.customers as cs
+import project.bookings.clinics as cls
+import project.bookings.services as ss
+import project.bookings.services_timeslots as st
+
+
+@bookings_blueprint.route('/bookings', methods=['POST'])
 def bookings():
 
     data = request.get_json()
@@ -42,29 +49,11 @@ def bookings():
 
     # # Return the response in json format
     return jsonify(response)
+    
 
-app = Flask(__name__)
-
-@app.route('/clinic/<clinic_id>/bookings', methods=['GET'])
+@bookings_blueprint.route('/clinic/<clinic_id>/bookings', methods=['GET'])
 def clinic_bookings(clinic_id):
 
     # Will return all bookings for a clinic
     # # Return the response in json format
     return jsonify(response)
-
-@app.route('/clinic/<clinic_id>/services/<service_id>/bookings', methods=['GET'])
-def clinic_service_bookings(clinic_id, service_id):
-
-    # Will return all bookings for a specific service in a clinic
-    # # Return the response in json format
-    return jsonify(response)
-
-
-@app.route('/')
-def index():
-    return "<h1>Welcome to Therapie Clinic</h1>"
-
-
-if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, host="0.0.0.0", port=5000)
