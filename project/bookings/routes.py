@@ -11,10 +11,10 @@ from project.models import Booking
 from project import db
 
 
-import project.bookings.customers as cs
-import project.bookings.clinics as cls
-import project.bookings.services as ss
-import project.bookings.services_timeslots as st
+from . import customers as cs
+from . import clinics as cls
+from . import services as ss
+from . import services_timeslots as st
 
 
 @bookings_blueprint.route('/bookings', methods=['POST'])
