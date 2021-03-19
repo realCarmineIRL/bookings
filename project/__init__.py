@@ -8,8 +8,8 @@ def create_app(config_filename=None):
     app.config.from_pyfile(config_filename)
     initialize_extensions(app)
     register_blueprints(app)
-    # with app.app_context():
-    #     db.create_all()  # Create sql tables for our data models
+    with app.app_context():
+        db.create_all()  # Create sql tables for our data models
     return app
 
 

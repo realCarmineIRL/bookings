@@ -1,6 +1,7 @@
 # bookings.py
 import os
 from flask import request, jsonify
+from datetime import datetime, timedelta
 
 
 from flask import render_template, request, flash, redirect, url_for
@@ -39,29 +40,74 @@ def bookings():
     response = {}
 
     # getting customer information
-    customer = cs.get_customer(customer_id)
-    clinic = cls.get_clinic(clinic_id)
-    service = ss.get_service_timeslots(service_id)
-    available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
+    try:
+        customer = cs.get_customer(customer_id)
+        clinic = cls.get_clinic(clinic_id)
+        service = ss.get_service_timeslots(service_id)
+        available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
+    except:
+        response = {}
+        response["ERROR"] = 'Database Error'
+        return jsonify(response), 500
 
-    new_booking = Booking(clinic["clinicId"], customer_id, service_id, date, start_time, start_time)
-    db.session.add(new_booking)
-    db.session.commit()
+    try:
+        results = db.session.query(Booking.start_time, Booking.end_time).filter(Booking.clinic_id == clinic_id, Booking.service_id == service_id, Booking.date == date).order_by(Booking.start_time).all()
+    except:
+        response = {}
+        response["ERROR"] = 'Database Error'
+        return jsonify(response), 500
+
+    services_booked = []
+
+    for row in results:
+        start_time, end_time = row
+
+        services_booked.append(start_time)
+
+    if data["startTime"] in services_booked:
+        response["MESSAGE"] = f'Timeslot requested is not available'
+        return jsonify(response), 202
+
+    end_time = datetime.strptime(f'{data["date"]}{data["startTime"]}', '%Y-%m-%dT%H:%M:%S') + timedelta(minutes=30)
+
+
+    try:
+        new_booking = Booking(clinic["clinicId"], customer_id, service_id, date, start_time, end_time.strftime('T%H:%M:%S'))
+        db.session.add(new_booking)
+        db.session.commit()
+    except:
+        response["ERROR"] = f'Booking for customer: {customer["firstName"]} {customer["lastName"]} for service: {service_id} in clinic: {clinic["clinicId"]} was NOT successful'
+        return jsonify(response), 500
 
     
     response["MESSAGE"] = f'Booking for customer: {customer["firstName"]} {customer["lastName"]} for service: {service_id} in clinic: {clinic["clinicId"]} was successful'
-    response["status_code"] = 200
-
-    # # Return the response in json format
-    return jsonify(response)
+    return jsonify(response), 201
     
 
 @bookings_blueprint.route('/clinic/<clinic_id>/bookings', methods=['GET'])
 def clinic_bookings(clinic_id):
-    response = {}
 
-    query = db.session.query(Booking.clinic_id, Booking.customer_id, Booking.service_id).filter(Booking.clinic_id == clinic_id).order_by(Booking.clinic_id)
-    # Will return all bookings for a clinic
-    # # Return the response in json format
-    response["status_code"] = 200
-    return jsonify(response)
+    try:
+        results = db.session.query(Booking.clinic_id, Booking.customer_id, Booking.service_id, Booking.date, Booking.start_time, Booking.end_time).filter(Booking.clinic_id == clinic_id).order_by(Booking.clinic_id).all()
+    except:
+        response = {}
+        response["ERROR"] = 'Database Error'
+        return jsonify(response), 500
+    
+    response = []
+
+    for row in results:
+        item = {}
+        clinic_id, customer_id, service_id, date, start_time, end_time = row
+
+        item['clinicId'] = clinic_id
+        item['customerId'] = customer_id
+        item['serviceId'] = service_id
+        item['date'] = date
+        item['startTime'] = start_time
+        item['endTime'] = end_time
+
+        response.append(item)
+
+    return jsonify(response), 200
+
