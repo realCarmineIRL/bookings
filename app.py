@@ -1,6 +1,9 @@
+import os
 from project import create_app
 
-app = create_app('flask.cfg')
+ENVIRONMENT = os.environ.get('ENVIRONMENT')
+
+app = create_app(ENVIRONMENT)
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
