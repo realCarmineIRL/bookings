@@ -44,9 +44,9 @@ def bookings():
     service = ss.get_service_timeslots(service_id)
     available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
 
-    # new_booking = Booking(clinic["clinicId"], customer_id, service_id, date, start_time, start_time)
-    # db.session.add(new_booking)
-    # db.session.commit()
+    new_booking = Booking(clinic["clinicId"], customer_id, service_id, date, start_time, start_time)
+    db.session.add(new_booking)
+    db.session.commit()
 
     
     response["MESSAGE"] = f'Booking for customer: {customer["firstName"]} {customer["lastName"]} for service: {service_id} in clinic: {clinic["clinicId"]} was successful'
@@ -60,7 +60,7 @@ def bookings():
 def clinic_bookings(clinic_id):
     response = {}
 
-    # query = db.session.query(Booking.clinic_id, Booking.customer_id, Booking.service_id).filter(Booking.clinic_id == clinic_id).order_by(Booking.clinic_id)
+    query = db.session.query(Booking.clinic_id, Booking.customer_id, Booking.service_id).filter(Booking.clinic_id == clinic_id).order_by(Booking.clinic_id)
     # Will return all bookings for a clinic
     # # Return the response in json format
     response["status_code"] = 200
