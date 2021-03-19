@@ -1,12 +1,16 @@
+import os
 import requests
 
+API_URL = os.environ.get('API_URL')
+API_KEY = os.environ.get('API_KEY')
+
 def get_customer(customer_id):
-  url = f'https://mj2fqlv9ta.execute-api.eu-west-1.amazonaws.com/calicchioc/customers/{customer_id}'
+  url = f'{API_URL}/customers/{customer_id}'
 
   payload={}
   headers = {
     'Accept': 'application/json',
-    'x-api-key': ''
+    'x-api-key': f'{API_KEY}'
   }
 
   response = requests.request("GET", url, headers=headers, data=payload)
