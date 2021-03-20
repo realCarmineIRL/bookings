@@ -127,4 +127,8 @@ def clinic_bookings(clinic_id):
 
         response.append(item)
 
+        
+    if not response:
+        return jsonify([]), 404
+
     return jsonify(response), 200
