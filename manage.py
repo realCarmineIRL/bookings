@@ -3,6 +3,7 @@ from flask_script import Manager # class for handling a set of commands
 from flask_migrate import Migrate, MigrateCommand
 from project import db, create_app
 from project.models import Booking
+import psycopg2
 
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT')
