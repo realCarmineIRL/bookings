@@ -20,5 +20,4 @@ def get_service_timeslots(service_id):
     response['MSG'] = 'Service must exists'
     return response, 404
 
-  # {'clinicId': 'clinic100', 'city': 'London', 'country': 'United Kingdom', 'streetAddress': '56, Haughton Rd'}
   return response.json(), response.status_code
