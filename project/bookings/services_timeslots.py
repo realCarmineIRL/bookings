@@ -41,6 +41,8 @@ def get_service_timeslots(clinic_id, service_id, requested_date, requested_time)
     end_time = datetime.strptime(f'{requested_date}{time_block["endTime"]}', '%Y-%m-%dT%H:%M:%S')
 
     timeslots = [dt.strftime('T%H:%M:%S') for dt in helpers.get_timeslots(start_time, end_time, timedelta(minutes=30))]
+
+    available_slot = False
     
     if requested_time in timeslots:
       available_slot = True

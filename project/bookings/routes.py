@@ -64,19 +64,24 @@ def bookings():
             return jsonify(response), 404
 
         available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
+
     except:
         response = {}
         response["ERROR"] = 'Having throuble connecting to API'
         return jsonify(response), 500
 
-    try:
-        results = db.session.query(Booking.start_time, Booking.end_time).filter(Booking.clinic_id == clinic_id, Booking.service_id == service_id, Booking.date == date).order_by(Booking.start_time).all()
-    except:
-        response = {}
-        response["ERROR"] = 'Database Error'
-        return jsonify(response), 500
+    if available_slot:
+        try:
+            results = db.session.query(Booking.start_time, Booking.end_time).filter(Booking.clinic_id == clinic_id, Booking.service_id == service_id, Booking.date == date).order_by(Booking.start_time).all()
+        except:
+            response = {}
+            response["ERROR"] = 'Database Error'
+            return jsonify(response), 500
 
-    if data["startTime"] in helpers.get_booked_timeslots(results):
+        if data["startTime"] in helpers.get_booked_timeslots(results):
+            response["MESSAGE"] = f'Timeslot requested is not available'
+            return jsonify(response), 202
+    else:
         response["MESSAGE"] = f'Timeslot requested is not available'
         return jsonify(response), 202
 
