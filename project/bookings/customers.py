@@ -5,6 +5,9 @@ API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('API_KEY')
 
 def get_customer(customer_id):
+  """
+  Returns customer info from api.
+  """
   url = f'{API_URL}/customers/{customer_id}'
 
   payload={}

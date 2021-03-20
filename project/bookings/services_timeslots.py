@@ -8,6 +8,9 @@ API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('API_KEY')
 
 def get_service_timeslots(clinic_id, service_id, requested_date, requested_time):
+  """
+  Returns service timeslots for a clinic from api.
+  """
   url = f'{API_URL}/clinics/{clinic_id}/services/{service_id}/timeslots/{requested_date}'
 
   payload={}

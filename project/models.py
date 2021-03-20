@@ -2,6 +2,9 @@ from project import db
 
 
 class Booking(db.Model):
+    """
+    Booking DB Model
+    """
 
     __tablename__ = 'bookings'
 

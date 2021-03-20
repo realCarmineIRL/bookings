@@ -56,7 +56,7 @@ def bookings():
             response["ERROR"] = f'{clinic["MSG"]}'
             return jsonify(response), 404
 
-        service, status_code = ss.get_service_timeslots(service_id)
+        service, status_code = ss.get_service(service_id)
 
         if status_code == 404:
             print(service["MSG"])
@@ -70,6 +70,7 @@ def bookings():
         response["ERROR"] = 'Having throuble connecting to API'
         return jsonify(response), 500
 
+    # checking if there time requested match service times for thee clinic and if the requested time is not already booked
     if available_slot:
         try:
             results = db.session.query(Booking.start_time, Booking.end_time).filter(Booking.clinic_id == clinic_id, Booking.service_id == service_id, Booking.date == date).order_by(Booking.start_time).all()

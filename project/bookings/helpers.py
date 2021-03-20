@@ -2,6 +2,9 @@
 
 
 def get_timeslots(start_date, end_date, delta):
+    """
+    Returns timeslots available  for a clinic in slots of 30min.
+    """
 
     current = start_date
     while current < end_date:
@@ -10,6 +13,9 @@ def get_timeslots(start_date, end_date, delta):
 
 
 def get_booked_timeslots(timeslots):
+    """
+    Returns booked times for a service in a clinic.
+    """
     services_booked = []
 
     for row in timeslots:

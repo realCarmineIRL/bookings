@@ -12,11 +12,16 @@ def create_app(config_filename=None):
 
 
 def initialize_extensions(app):
-
+    """
+    Initialize DB
+    """
     db.init_app(app)
 
 
 def register_blueprints(app):
+    """
+    Registering endpoints to app
+    """
 
     from project.bookings import bookings_blueprint
 

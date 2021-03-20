@@ -4,7 +4,10 @@ import requests
 API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('API_KEY')
 
-def get_service_timeslots(service_id):
+def get_service(service_id):
+  """
+  Returns service info from api.
+  """
   url = f'{API_URL}/services/{service_id}'
 
   payload={}

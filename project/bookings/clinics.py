@@ -5,6 +5,9 @@ API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('API_KEY')
 
 def get_clinic(clinic_id):
+  """
+  Returns clinic info from api.
+  """
   url = f'{API_URL}/clinics/{clinic_id}'
 
   payload={}
