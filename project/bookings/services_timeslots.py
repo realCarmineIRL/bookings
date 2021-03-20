@@ -2,6 +2,8 @@ import os
 import requests
 from datetime import datetime, timedelta
 
+from . import helpers
+
 API_URL = os.environ.get('API_URL')
 API_KEY = os.environ.get('API_KEY')
 
@@ -38,17 +40,10 @@ def get_service_timeslots(clinic_id, service_id, requested_date, requested_time)
     start_time = datetime.strptime(f'{requested_date}{time_block["startTime"]}', '%Y-%m-%dT%H:%M:%S')
     end_time = datetime.strptime(f'{requested_date}{time_block["endTime"]}', '%Y-%m-%dT%H:%M:%S')
 
-    timeslots = [dt.strftime('T%H:%M:%S') for dt in get_timeslots(start_time, end_time, timedelta(minutes=30))]
+    timeslots = [dt.strftime('T%H:%M:%S') for dt in helpers.get_timeslots(start_time, end_time, timedelta(minutes=30))]
     
     if requested_time in timeslots:
       available_slot = True
       break
 
   return available_slot
-
-def get_timeslots(start_date, end_date, delta):
-
-    current = start_date
-    while current < end_date:
-        yield current
-        current += delta

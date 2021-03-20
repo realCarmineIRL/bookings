@@ -11,6 +11,7 @@ from . import bookings_blueprint
 from project.models import Booking
 from project import db
 
+from . import helpers
 
 from . import customers as cs
 from . import clinics as cls
@@ -57,7 +58,7 @@ def bookings():
         response["ERROR"] = 'Database Error'
         return jsonify(response), 500
 
-    if data["startTime"] in get_booked_timeslots(results):
+    if data["startTime"] in helpers.get_booked_timeslots(results):
         response["MESSAGE"] = f'Timeslot requested is not available'
         return jsonify(response), 202
 
@@ -104,14 +105,3 @@ def clinic_bookings(clinic_id):
         response.append(item)
 
     return jsonify(response), 200
-
-
-def get_booked_timeslots(timeslots):
-    services_booked = []
-
-    for row in timeslots:
-        start_time, end_time = row
-
-        services_booked.append(start_time)
-
-    return services_booked
