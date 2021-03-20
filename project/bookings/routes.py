@@ -57,14 +57,7 @@ def bookings():
         response["ERROR"] = 'Database Error'
         return jsonify(response), 500
 
-    services_booked = []
-
-    for row in results:
-        start_time, end_time = row
-
-        services_booked.append(start_time)
-
-    if data["startTime"] in services_booked:
+    if data["startTime"] in get_booked_timeslots(results):
         response["MESSAGE"] = f'Timeslot requested is not available'
         return jsonify(response), 202
 
@@ -72,6 +65,7 @@ def bookings():
 
 
     try:
+        print(start_time)
         new_booking = Booking(clinic["clinicId"], customer_id, service_id, date, start_time, end_time.strftime('T%H:%M:%S'))
         db.session.add(new_booking)
         db.session.commit()
@@ -111,3 +105,13 @@ def clinic_bookings(clinic_id):
 
     return jsonify(response), 200
 
+
+def get_booked_timeslots(timeslots):
+    services_booked = []
+
+    for row in timeslots:
+        start_time, end_time = row
+
+        services_booked.append(start_time)
+
+    return services_booked
