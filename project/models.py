@@ -23,14 +23,3 @@ class Booking(db.Model):
         self.start_time = start_time
         self.end_time = end_time
 
-    def __init__(self, name):
-        """initialize with name."""
-        self.name = name
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit() 
-
-    @staticmethod
-    def get_all():
-        return Booking.query.all()
