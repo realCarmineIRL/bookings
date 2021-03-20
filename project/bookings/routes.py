@@ -47,7 +47,7 @@ def bookings():
         available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
     except:
         response = {}
-        response["ERROR"] = 'Database Error'
+        response["ERROR"] = 'Having throuble connecting to API'
         return jsonify(response), 500
 
     try:
