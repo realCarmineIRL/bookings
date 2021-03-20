@@ -14,6 +14,11 @@ def get_customer(customer_id):
   }
 
   response = requests.request("GET", url, headers=headers, data=payload)
+  
+  if response.status_code == 404:
+    response = {}
+    response['MSG'] = 'Customer must exists'
+    return response, 404
 
   # {"customerId":"ab123","firstName":"John","lastName":"Doe","mobile":871229345}
-  return response.json()
+  return response.json(), response.status_code

@@ -40,11 +40,29 @@ def bookings():
 
     response = {}
 
-    # getting customer information
+    #getting info from api
     try:
-        customer = cs.get_customer(customer_id)
-        clinic = cls.get_clinic(clinic_id)
-        service = ss.get_service_timeslots(service_id)
+        customer, status_code = cs.get_customer(customer_id)
+        
+        if status_code == 404:
+            print(customer["MSG"])
+            response["ERROR"] = f'{customer["MSG"]}'
+            return jsonify(response), 404
+            
+        clinic, status_code = cls.get_clinic(clinic_id)
+
+        if status_code == 404:
+            print(clinic["MSG"])
+            response["ERROR"] = f'{clinic["MSG"]}'
+            return jsonify(response), 404
+
+        service, status_code = ss.get_service_timeslots(service_id)
+
+        if status_code == 404:
+            print(service["MSG"])
+            response["ERROR"] = f'{service["MSG"]}'
+            return jsonify(response), 404
+
         available_slot = st.get_service_timeslots(clinic_id, service_id, date, start_time) # True if requested time matches clinic service times
     except:
         response = {}
