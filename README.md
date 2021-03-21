@@ -54,7 +54,7 @@ Run development server to serve the Flask application:
 (venv) $ flask run
 ```
 
-Creating a new booking
+Creating a new booking locally
 
 ```sh
 curl --location --request POST 'http://0.0.0.0:5000/bookings' \
@@ -68,10 +68,31 @@ curl --location --request POST 'http://0.0.0.0:5000/bookings' \
 }'
 ```
 
-Returning bookings for a clinic
+Returning bookings for a clinic locally
 
 ```sh
 curl --location --request GET 'http://0.0.0.0:5000/clinic/clinic100/bookings' \
+--header 'Content-Type: application/json'
+```
+
+Creating a new booking Cloud (Heroku)
+
+```sh
+curl --location --request POST 'https://booking-system-tc.herokuapp.com/bookings' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "clinicId": "clinic100",
+    "customerId": "ab123",
+    "serviceId": "ser100",
+    "date": "2021-01-25",
+    "startTime": "T11:00:00"
+}'
+```
+
+Returning bookings for a clinic Cloud (Heroku)
+
+```sh
+curl --location --request GET 'https://booking-system-tc.herokuapp.com/clinic/clinic100/bookings' \
 --header 'Content-Type: application/json'
 ```
 
@@ -96,7 +117,32 @@ To run all the tests:
 (venv) $ python -m pytest -v
 ```
 
+## Future Development
+
+If I had more time these are the extra features I could add to the app
+
+- Option to update booking
+- Option to cancel booking
+- Add endpoint to retrieve bookings for a service in a clinic
+- Add endpoint to retrieve all bookings for a customer
+- Add booking confirmations mesages
+- Add Booking reminders
+- Add more tests
+
+## Deployment to the Heroku
+
+Deployment method Github master branch with option to wait for CI to pass before deploy enabled.
+
+flow:
+
+- Code get merged into master branch
+- Travis-CI runs tests
+- if tests pass Heroku starts deployment:
+  - runs db migrations
+  - deploy the app
+
 ## Assumptions
 
 - timeslots are 30min.
+- ClinicId, ServiceId and CustomerId and startTime should always be present in post request.
 - customer can book same service multiple slots in a day but not rebook a current booked slot.
