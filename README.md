@@ -127,7 +127,7 @@ If I had more time these are the extra features I could add to the app
 - Add endpoint to retrieve all bookings for a customer
 - Add booking confirmations mesages
 - Add Booking reminders
-- Add more tests
+- Add more effective/efficient tests
 
 ## Deployment to the Heroku
 
@@ -146,3 +146,7 @@ flow:
 - timeslots are 30min.
 - ClinicId, ServiceId and CustomerId and startTime should always be present in post request.
 - customer can book same service multiple slots in a day but not rebook a current booked slot.
+
+## Notes
+
+- test_routes.py is disabled because I was having issues with Travis-CI and SQLite as it seems not supported for flask apps only for ruby and rails as per their documentation, the tests pass locally.
